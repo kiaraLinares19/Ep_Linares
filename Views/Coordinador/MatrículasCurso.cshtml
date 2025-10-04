@@ -1,0 +1,39 @@
+@model IEnumerable<Ep_Linares.Models.Matricula>
+
+@{
+    ViewData["Title"] = "Matrículas del Curso";
+}
+
+<h2>Matrículas</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Usuario</th>
+            <th>Fecha Registro</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var matricula in Model)
+        {
+            <tr>
+                <td>@matricula.Usuario.UserName</td>
+                <td>@matricula.FechaRegistro.ToString("g")</td>
+                <td>@matricula.Estado</td>
+                <td>
+                    @if (matricula.Estado ==Ep_Linares.Models.EstadoMatricula.Pendiente)
+                    {
+                        <a asp-action="ConfirmarMatricula" asp-route-id="@matricula.Id" class="btn btn-success btn-sm">Confirmar</a>
+                        <a asp-action="CancelarMatricula" asp-route-id="@matricula.Id" class="btn btn-danger btn-sm">Cancelar</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<p>
+    <a asp-action="ListaCursos" class="btn btn-secondary">Volver a Cursos</a>
+</p>
