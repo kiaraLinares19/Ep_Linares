@@ -7,28 +7,28 @@ namespace Ep_Linares.Models
         public int Id { get; set; }
 
         [Required]
-        [MaxLength(10)] // Definir un tamaño razonable para el código
-        public string Codigo { get; set; } // Único por restricción
+        [StringLength(10)]
+        public string Codigo { get; set; } = string.Empty;
 
         [Required]
-        public string Nombre { get; set; }
+        [StringLength(100)]
+        public string Nombre { get; set; } = string.Empty;
 
-        // Restricción: Créditos > 0 (Se manejará con Data Annotations y/o validación de negocio)
-        [Range(1, int.MaxValue, ErrorMessage = "Los créditos deben ser mayores a cero.")]
+        [Range(1, int.MaxValue, ErrorMessage = "Los créditos deben ser mayores que 0.")]
         public int Creditos { get; set; }
 
-        [Range(1, int.MaxValue, ErrorMessage = "El cupo máximo debe ser mayor a cero.")]
+        [Range(1, int.MaxValue, ErrorMessage = "El cupo máximo debe ser mayor que 0.")]
         public int CupoMaximo { get; set; }
 
         [Required]
         public TimeSpan HorarioInicio { get; set; }
 
         [Required]
+        [Compare(nameof(HorarioInicio), ErrorMessage = "El horario de inicio debe ser menor que el horario de fin.")]
         public TimeSpan HorarioFin { get; set; }
-        
+
         public bool Activo { get; set; } = true;
 
-        // Propiedad de navegación
-        public ICollection<Matricula> Matriculas { get; set; } = new List<Matricula>();
+        public ICollection<Matricula>? Matriculas { get; set; }
     }
 }
