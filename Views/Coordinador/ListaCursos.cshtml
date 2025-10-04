@@ -1,0 +1,41 @@
+@model IEnumerable<Ep_Linares.Models.Curso>
+
+@{
+    ViewData["Title"] = "Lista de Cursos";
+}
+
+<h2>Lista de Cursos</h2>
+
+<p>
+    <a asp-action="CrearCurso" class="btn btn-success">Crear Nuevo Curso</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Créditos</th>
+            <th>Cupo Máximo</th>
+            <th>Activo</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var curso in Model)
+        {
+            <tr>
+                <td>@curso.Codigo</td>
+                <td>@curso.Nombre</td>
+                <td>@curso.Creditos</td>
+                <td>@curso.CupoMaximo</td>
+                <td>@(curso.Activo ? "Sí" : "No")</td>
+                <td>
+                    <a asp-action="EditarCurso" asp-route-id="@curso.Id" class="btn btn-warning btn-sm">Editar</a>
+                    <a asp-action="DesactivarCurso" asp-route-id="@curso.Id" class="btn btn-danger btn-sm">Desactivar</a>
+                    <a asp-action="MatrículasCurso" asp-route-id="@curso.Id" class="btn btn-info btn-sm">Ver Matrículas</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

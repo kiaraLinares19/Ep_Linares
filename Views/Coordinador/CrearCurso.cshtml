@@ -1,0 +1,40 @@
+@model Ep_Linares.Models.Curso
+
+@{
+    ViewData["Title"] = "Crear Curso";
+}
+
+<h2>Crear Curso</h2>
+
+<form asp-action="CrearCurso" method="post">
+    <div class="mb-3">
+        <label asp-for="Codigo" class="form-label"></label>
+        <input asp-for="Codigo" class="form-control" />
+        <span asp-validation-for="Codigo" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Nombre" class="form-label"></label>
+        <input asp-for="Nombre" class="form-control" />
+        <span asp-validation-for="Nombre" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Creditos" class="form-label"></label>
+        <input asp-for="Creditos" class="form-control" />
+        <span asp-validation-for="Creditos" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="CupoMaximo" class="form-label"></label>
+        <input asp-for="CupoMaximo" class="form-control" />
+        <span asp-validation-for="CupoMaximo" class="text-danger"></span>
+    </div>
+    <div class="mb-3 form-check">
+        <input asp-for="Activo" class="form-check-input" />
+        <label asp-for="Activo" class="form-check-label"></label>
+    </div>
+    <button type="submit" class="btn btn-success">Crear</button>
+    <a asp-action="ListaCursos" class="btn btn-secondary">Cancelar</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
