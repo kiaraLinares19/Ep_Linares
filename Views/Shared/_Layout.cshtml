@@ -11,6 +11,12 @@
 </head>
 <body>
     <header>
+    @{
+    var ultimoCurso = Context.Session.GetString("UltimoCurso");
+    var ultimoCursoId = Context.Session.GetInt32("UltimoCursoId");
+}
+
+        
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Ep_Linares</a>
@@ -35,6 +41,14 @@
                 </div>
             </div>
         </nav>
+        @if (!string.IsNullOrEmpty(ultimoCurso))
+        {
+            <div class="alert alert-info text-center m-2">
+                <a asp-controller="Cursos" asp-action="Details" asp-route-id="@ultimoCursoId">
+                    Volver al curso @ultimoCurso
+                </a>
+            </div>
+        }
     </header>
     <div class="container">
         <main role="main" class="pb-3">
