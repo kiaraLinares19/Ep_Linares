@@ -1,0 +1,13 @@
+@model Ep_Linares.Models.Curso
+
+<h2>Detalle del Curso</h2>
+
+<div>
+    <p><strong>Código:</strong> @Model.Codigo</p>
+    <p><strong>Nombre:</strong> @Model.Nombre</p>
+    <p><strong>Créditos:</strong> @Model.Creditos</p>
+    <p><strong>Horario:</strong> @Model.HorarioInicio - @Model.HorarioFin</p>
+</div>
+
+<a asp-controller="Matriculas" asp-action="Create" asp-route-cursoId="@Model.Id" class="btn btn-success">Inscribirse</a>
+<a asp-action="Index" class="btn btn-secondary">Volver</a>
