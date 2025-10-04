@@ -1,13 +1,24 @@
 @model Ep_Linares.Models.Curso
 
-<h2>Detalle del Curso</h2>
+@{
+    ViewData["Title"] = "Detalle del Curso";
+}
 
-<div>
-    <p><strong>Código:</strong> @Model.Codigo</p>
-    <p><strong>Nombre:</strong> @Model.Nombre</p>
-    <p><strong>Créditos:</strong> @Model.Creditos</p>
-    <p><strong>Horario:</strong> @Model.HorarioInicio - @Model.HorarioFin</p>
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h4>@Model.Nombre</h4>
+    </div>
+    <div class="card-body">
+        <p><strong>Código:</strong> @Model.Codigo</p>
+        <p><strong>Créditos:</strong> @Model.Creditos</p>
+        <p><strong>Horario:</strong> @Model.HorarioInicio - @Model.HorarioFin</p>
+        <p><strong>Cupo máximo:</strong> @Model.CupoMaximo</p>
+
+        <form asp-action="Inscribirse" method="post">
+            <input type="hidden" name="id" value="@Model.Id" />
+            <button type="submit" class="btn btn-success">Inscribirse</button>
+        </form>
+    </div>
 </div>
 
-<a asp-controller="Matriculas" asp-action="Create" asp-route-cursoId="@Model.Id" class="btn btn-success">Inscribirse</a>
-<a asp-action="Index" class="btn btn-secondary">Volver</a>
+<a asp-action="Index" class="btn btn-link mt-3">← Volver al catálogo</a>
