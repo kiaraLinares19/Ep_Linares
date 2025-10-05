@@ -5,7 +5,8 @@ WORKDIR /src
 
 # --- PASO 1: INSTALAR DOTNET EF TOOL ---
 # Instalamos la herramienta global 'dotnet-ef'
-RUN dotnet tool install --global dotnet-ef --version 9.0.0-* ENV PATH="${PATH}:/root/.dotnet/tools"
+RUN dotnet tool install --global dotnet-ef --version 9.0.0-* # Añadimos el directorio de herramientas globales al PATH para que 'dotnet ef' funcione.
+ENV PATH="${PATH}:/root/.dotnet/tools"
 # ----------------------------------------
 
 COPY ["Ep_Linares.csproj", ""] 
@@ -37,8 +38,7 @@ COPY --from=build /app/publish .
 
 # --- COPIA 2 (CLAVE): Copiar el archivo de base de datos generado ---
 # Copiamos cualquier archivo *.db que se haya generado en /src (por la migración) 
-# al directorio de trabajo final (/app). Esto asegura que la DB esté presente.
-# Si tu archivo DB tiene un nombre específico (ej. Ep_Linares.db), puedes usar ese nombre en lugar de *.db
+# al directorio de trabajo final (/app).
 RUN cp /src/*.db . || echo "Advertencia: No se encontró ningún archivo *.db para copiar."
 # ---------------------------------------------------------------------
 
