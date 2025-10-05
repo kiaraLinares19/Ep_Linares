@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Ep_Linares.Data;
+// Asegúrate de que este using esté si usas .Database.Migrate();
+using Microsoft.Extensions.DependencyInjection; 
 using Microsoft.Extensions.Caching.StackExchangeRedis; 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -44,6 +46,24 @@ builder.Services.AddSession(options =>
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
+
+// --- INICIO: Bloque de Migración de Base de Datos (LA SOLUCIÓN CLAVE) ---
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<ApplicationDbContext>();
+        // Esto crea el archivo DB si no existe, y aplica todas las migraciones pendientes.
+        context.Database.Migrate(); 
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Ocurrió un error al aplicar las migraciones de la base de datos.");
+    }
+}
+// --- FIN: Bloque de Migración de Base de Datos ---
 
 
 // Pipeline de Solicitudes
