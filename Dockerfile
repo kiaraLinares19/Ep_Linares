@@ -1,9 +1,12 @@
-
+# 1. ETAPA DE BUILD (Compilación y Migración)
+# Utilizamos el SDK de .NET 9.0
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build 
 WORKDIR /src
 
 # --- PASO CLAVE 1: INSTALAR DOTNET EF TOOL EN EL SDK ---
-RUN dotnet tool install --global dotnet-ef --version 9.0.0-* ENV PATH="${PATH}:/root/.dotnet/tools"
+# Instalamos la herramienta global 'dotnet-ef'
+RUN dotnet tool install --global dotnet-ef --version 9.0.0-* # Añadimos el directorio de herramientas globales al PATH para que 'dotnet ef' funcione.
+ENV PATH="${PATH}:/root/.dotnet/tools"
 # --------------------------------------------------------
 
 COPY ["Ep_Linares.csproj", ""] 
@@ -18,7 +21,6 @@ RUN dotnet publish "Ep_Linares.csproj" -c Release -o /app/publish
 # Mantenemos la migración en el build para generar el archivo SQLite.
 WORKDIR /app/publish
 RUN dotnet ef database update --project /src/Ep_Linares.csproj --startup-project /src/Ep_Linares.csproj
-# Nota: Apuntamos explícitamente a /src, aunque el .csproj debería ser visible.
 # -------------------------------------------------------------------------
 
 # 2. ETAPA FINAL (Ejecución)
