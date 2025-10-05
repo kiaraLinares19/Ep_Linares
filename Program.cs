@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Ep_Linares.Data;
-// Asegúrate de que este using esté si usas .Database.Migrate();
 using Microsoft.Extensions.DependencyInjection; 
 using Microsoft.Extensions.Caching.StackExchangeRedis; 
+using Microsoft.Extensions.Logging; // <-- AGREGADO: Necesario para usar ILogger en el catch
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -53,14 +53,17 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
     try
     {
+        // El ApplicationDbContext debe ser accesible aquí
         var context = services.GetRequiredService<ApplicationDbContext>();
+        
         // Esto crea el archivo DB si no existe, y aplica todas las migraciones pendientes.
         context.Database.Migrate(); 
     }
     catch (Exception ex)
     {
+        // Se asegura de que si hay un error de DB, se muestre en los logs de Render
         var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "Ocurrió un error al aplicar las migraciones de la base de datos.");
+        logger.LogError(ex, "Ocurrió un error al aplicar las migraciones de la base de datos. ¡Revisa tu conexión o las migraciones!");
     }
 }
 // --- FIN: Bloque de Migración de Base de Datos ---
@@ -72,6 +75,14 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
+else
+{
+    // En tu Dockerfile configuraste ASPNETCORE_ENVIRONMENT=Development
+    // Si la aplicación arranca en Development, aquí es donde podrías usar
+    // app.UseDeveloperExceptionPage(); si estuvieras en un entorno local,
+    // pero en producción/Render, el UseExceptionHandler es más seguro.
+}
+
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
