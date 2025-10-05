@@ -11,15 +11,15 @@ COPY . .
 # Publica la aplicación
 RUN dotnet publish "Ep_Linares.csproj" -c Release -o /app/publish
 
-# --- PASO CLAVE: GENERAR EL ARCHIVO SQLite MIGRADO EN LA ETAPA DE BUILD ---
-# Ejecutamos la migración. Render debe encontrar el EF tool aquí (en el SDK).
-# Esto crea el archivo 'portalacademico.db' dentro de la carpeta /app/publish.
+# --- CORRECCIÓN CLAVE: Usamos 'dotnet ef' en la etapa de build para migrar ---
+# La herramienta 'dotnet ef' migra y se detiene (no inicia el host)
 WORKDIR /app/publish
-RUN dotnet Ep_Linares.dll database update
+# Usamos 'dotnet ef database update' que está disponible en el SDK
+RUN dotnet ef database update --project Ep_Linares.csproj --startup-project Ep_Linares.csproj
 # -------------------------------------------------------------------------
 
 # 2. ETAPA FINAL (Ejecución)
-# Usamos el Runtime de ASP.NET 9.0 (no necesitamos el SDK aquí, solo la aplicación)
+# Usamos el Runtime de ASP.NET 9.0 (más ligero)
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS final
 WORKDIR /app
 
@@ -29,5 +29,5 @@ EXPOSE 8080
 # Copia los archivos publicados, incluyendo el archivo SQLite migrado.
 COPY --from=build /app/publish .
 
-# Inicia la aplicación (ya no necesita ejecutar la migración, solo iniciar la app)
+# Inicia la aplicación. Ya no necesita correr la migración.
 ENTRYPOINT ["dotnet", "Ep_Linares.dll"]
